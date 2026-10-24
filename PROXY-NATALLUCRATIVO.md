@@ -17,7 +17,7 @@ O acesso HTTPS à origem Vercel retornou HTTP 403 no ambiente de trabalho. A ide
 No natalino, `next.config.mjs` define `basePath: '/natallucrativo'`. Esse valor é incorporado ao build: **é obrigatório reconstruir e publicar também o natalino**. Os dois projetos precisam ser publicados em ordem; alterar somente o principal não basta.
 
 - `next/link` adiciona o prefixo automaticamente; não o duplique nos links.
-- `lib/images.ts` adiciona o prefixo aos caminhos públicos com `assetPath`, mantendo a busca de arquivos no disco inalterada.
+- `lib/images.ts` mantém o mapeamento explícito da arte, logo e sete capas oficiais da main. `withBasePath` delega a `assetPath` para prefixar os arquivos uma única vez.
 - Scripts, CSS, módulos, fontes geradas pelo Next e o otimizador de imagens usam `/natallucrativo/_next/...`.
 - Sitemap, robots e canonical usam o domínio público com o prefixo, sem escapar para a raiz.
 - Não foi configurado `assetPrefix`: `basePath` já isola os recursos. Um assetPrefix adicional pode duplicar caminhos.
@@ -81,3 +81,12 @@ PROXY_HOST_UNDER_TEST=1 PLAYWRIGHT_BASE_URL=http://127.0.0.1:3030 PLAYWRIGHT_CHR
 ```
 
 A variável do executável deve apontar ao Chromium instalado; em outra máquina use `npx playwright install chromium` e omita essa variável. Não leve a origem localhost para as configurações da Vercel. Remova a variável local e refaça o build padrão antes de testar contra a origem de produção.
+
+
+## Resolução de conflitos do PR #3
+
+Atualização contra a main `55ed232`: os 13 conflitos foram resolvidos mantendo a versão visual mais recente, as sete capas e os sete depoimentos reais, o checkout e os valores comerciais. Nenhum arquivo em `public/images` foi alterado. A configuração ativa é `next.config.mjs`; `lib/routing.mjs` é a fonte única do prefixo e da origem, com adaptadores em `lib/paths.ts` e `lib/site.ts` para preservar a API da main. Não foi mantida uma segunda configuração Next em TypeScript.
+
+Nesta resolução, passaram 9 testes unitários, lint, TypeScript, build e 22 testes de navegador do projeto natalino em mobile/desktop. Dois testes do host principal foram pulados pela condição existente: exigem um servidor do projeto principal e `PROXY_HOST_UNDER_TEST=1`. O projeto principal não foi executado nem modificado nesta resolução. Os testes locais confirmaram as seis rotas em `/natallucrativo`, arquivos originais, Next Image, navegação/RSC, recursos CSS/JS, sitemap, canônicos, menu, FAQ e zoom dos depoimentos.
+
+A resolução atualiza apenas a branch do PR, sem integrar o PR à main nem solicitar deploy de Production. O campo de mergeabilidade do GitHub não estava acessível via API neste ambiente; a compatibilidade foi verificada pelo Git, garantindo que a main atual é ancestral do commit enviado.
