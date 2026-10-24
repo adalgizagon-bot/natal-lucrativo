@@ -1,2 +1,5 @@
 import type { MetadataRoute } from 'next';
-export default function sitemap():MetadataRoute.Sitemap {const base=process.env.SITE_URL?.replace(/\/$/,'');return base?['','/combo-natal-lucrativo','/cursos','/contato','/politica-de-privacidade','/termos-de-uso'].map(route=>({url:`${base}${route}`})):[];}
+import { siteUrl } from '@/lib/site';
+export default function sitemap(): MetadataRoute.Sitemap {
+  return ['', '/combo-natal-lucrativo', '/cursos', '/contato', '/politica-de-privacidade', '/termos-de-uso'].map(route => ({ url: siteUrl(route) }));
+}

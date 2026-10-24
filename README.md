@@ -1,83 +1,73 @@
 # Natal Lucrativo em Casa
 
-Projeto independente de página de vendas com Next.js App Router, TypeScript, Tailwind CSS e Lucide React. Não altera nem depende do site da Confeitaria Lucrativa.
+Site independente em Next.js App Router, TypeScript, Tailwind CSS e Lucide React. Repositório: `adalgizagon-bot/natal-lucrativo`. Não depende do site da Confeitaria Lucrativa.
 
 ## Executar
 
-Requer Node.js 20.9+ (validado com 24). No diretório deste projeto:
+Node.js 24.x (definido em `.nvmrc` e `package.json`):
 
 ```sh
-npm ci --cache /workspace/.npm-cache
+npm ci
 npm run dev
 ```
 
-Abra a porta 3000 no recurso de visualização do seu ambiente, ou acesse `http://localhost:3000` em uma máquina local. Para produção local: `npm run build` e `npm start`.
+O servidor usa a porta 3000; abra `/natallucrativo` (a raiz `/` não é a home deste projeto). Para produção local: `npm run build` e `npm start`. No ambiente cloud, use `npm ci --cache /workspace/.npm-cache` caso o cache padrão não seja gravável. Cada tarefa já é isolada; use o checkout existente, sem criar worktree salvo solicitação.
 
-## Páginas
+## Rotas e configuração
 
-`/`, `/combo-natal-lucrativo`, `/cursos`, `/contato`, `/politica-de-privacidade`, `/termos-de-uso`. A barra fixa mobile aparece na página do combo. Cabeçalho e rodapé preservam os destinos de navegação e contato.
+Páginas relativas ao basePath `/natallucrativo`: `/`, `/combo-natal-lucrativo`, `/cursos`, `/contato`, `/politica-de-privacidade`, `/termos-de-uso`. A página do combo inclui barra fixa mobile com espaço livre no rodapé.
 
-## Configuração comercial
+`lib/config.ts` centraliza os sete materiais, preço, referência, checkout e Instagram. Oferta solicitada: de R$ 197,00 por R$ 29,90; economia de R$ 167,10 e desconto arredondado de 85%, calculados. Manter a comparação comercial verdadeira e atualizada. Todos os botões usam o mesmo checkout Hotmart, com produto terminado em letra **O** e parâmetros preservados. A consulta externa ao preço foi bloqueada pelo proxy (403); o preço no checkout não foi confirmado.
 
-`lib/config.ts` centraliza os preços, checkout, Instagram e sete materiais. O produto Hotmart termina com a letra **O**; todos os botões usam a mesma URL com os parâmetros preservados. O preço externo não foi confirmado: a rede retornou 403.
+Copie `.env.example` para `.env.local` somente se necessário:
 
-O preço de referência R$ 197,00 está configurado, mas a comparação está oculta por padrão (`referencePriceConfirmed: false`). Ative apenas após confirmar sua veracidade comercial. O desconto de aproximadamente 85% é calculado, não fixado. O preço promocional é R$ 29,90.
+- `SITE_URL`: `https://www.confeitarialucrativaoficial.com`, sem sufixo de pasta. Valor público em `.env.production`; mantenha o mesmo valor nas configurações Vercel. Sitemap e canônicos incluem `/natallucrativo` automaticamente.
+- `NEXT_PUBLIC_WHATSAPP_NUMBER`: opcional, 10 a 15 dígitos com país e DDD. Sem número válido, o canal não aparece. Requer novo build.
 
-Copie `.env.example` para `.env.local` e preencha apenas valores reais:
+Não há coleta de cartão, formulário ou analytics. Os documentos legais são textos-base e ainda precisam de revisão e identificação real do fornecedor antes do uso comercial.
 
-- `SITE_URL`: domínio HTTPS final, sem barra ao final. Sem ele, o sitemap fica vazio para não anunciar um domínio inventado. Configure antes de publicar e faça novo build.
-- `NEXT_PUBLIC_WHATSAPP_NUMBER`: opcional, 10 a 15 dígitos, com país e DDD. Na ausência de número válido, o botão não aparece. Requer novo build.
+## Imagens oficiais
 
-Nenhum segredo, dado de cartão, formulário ou analytics é incluído.
+A `main` foi integrada à branch de implementação preservando o trabalho anterior. Os originais de `public/images` foram mantidos intactos. `lib/images.ts` documenta a associação exata:
 
-## Imagens pendentes
+| Uso | Arquivo |
+| --- | --- |
+| Topo | `imagem topo.png` |
+| Cabeçalho | `Logo Natal Lucrativo em Casa.png` |
+| Cupcakes | `Cupcakes Natalinos_ Receitas para Vender.png` |
+| Donuts | `Donuts Natalinos_ Receitas para Encantar e Vender.png` |
+| Panetone e Chocotone | `Capa Natalina de Panetone e Chocotone.png` |
+| Recheios | `Natal Lucrativo_ Recheios de Chocotone.png` |
+| Ceia de Ano Novo | `Natal Lucrativo_ 15 Receitas Festivas.png` |
+| Ceia de Natal | `Natal Lucrativo_ Ceia Festiva em Casa.png` |
+| Biscoitos | `Biscoitos Decorados Natalinos Lucrativos.png` |
 
-Nenhuma imagem foi fornecida nesta sessão; somente o arquivo de requisitos em texto foi recebido. O bloco editorial no topo informa claramente a ausência da arte e não representa uma capa oficial. Não há fotografias ou galeria fictícias.
+Next Image otimiza a entrega; proporções 3:2 (topo/logo) e 2:3 (capas) preservam todo o conteúdo com `object-fit: contain`. Imagem de topo aparece antes da copy no mobile. Capas ocupam cartões individuais, uma coluna no celular para manter a leitura. Não são exibidos avisos provisórios quando os arquivos estão presentes.
 
-Para incluir os originais, sem remover arquivos existentes:
+## Depoimentos reais
 
-- Arte: `public/images/combo-oficial.webp`, `.png` ou `.jpg` (nessa ordem de prioridade).
-- Capas: `public/images/ebook-01.webp` até `ebook-07.webp`, na ordem de `lib/config.ts`.
+`lib/testimonials.ts` cadastra `Depo 1.jpg` a `Depo 7.jpg`, arquivos fornecidos pelo responsável, sem nomes, textos, notas ou resultados adicionados. Não existem mais exemplos fictícios, inclusive em desenvolvimento.
 
-Esses são nomes de integração previstos, não arquivos existentes. Os componentes só exibem arquivos encontrados, com Next Image, proporção preservada e `object-fit: contain`, sem textos sobrepostos. Execute novo build após adicionar imagens e confirme visualmente a arte original. Fotografias de receitas devem ser fornecidas e identificadas por categoria antes de implementar uma galeria.
+As capturas mencionam materiais e cursos de confeitaria da marca. O aviso contextual da seção foi removido conforme solicitado; as mensagens originais não foram alteradas. As capturas são exibidas integralmente, com máscaras visuais somente sobre fotos de perfil e identificadores desnecessários. Essas máscaras se mantêm na ampliação; as mensagens não são reescritas. Os originais continuam públicos no repositório e em `public/images`, conforme recebidos; ocultação visual não remove dados dos arquivos originais. Para retirar dados permanentemente dos arquivos públicos, o responsável deve fornecer versões anonimizadas e considerar o histórico do GitHub.
 
-## Validação
+Carrossel: gesto de arrastar, botões e teclado. Cada cartão abre um diálogo nativo com imagem proporcional, ampliação adicional, navegação anterior/próxima, fechamento por Escape e retorno do foco. Em telas estreitas, use “Ampliar mais” e role a imagem para ler em resolução maior. Não há avaliações com estrelas nem promessas financeiras adicionadas.
+
+## Verificações
 
 ```sh
 npm test
 npm run lint
 npm run typecheck
 npm run build
-PLAYWRIGHT_BROWSERS_PATH=/workspace/.playwright npx playwright install chromium
-PLAYWRIGHT_BROWSERS_PATH=/workspace/.playwright npx playwright test
+PLAYWRIGHT_CHROMIUM_EXECUTABLE=/usr/bin/chromium npx playwright test --workers=2
 ```
 
-Os testes de navegador iniciam o servidor de produção e verificam as seis rotas em mobile e desktop, menu mobile, FAQ, ausência de rolagem horizontal, erros de JavaScript e URLs de compra. Os testes unitários verificam produto, parâmetros do checkout, cálculo e composição do combo. Imagens oficiais precisam de revisão adicional quando forem recebidas.
+Para máquinas sem Chromium instalado: `npx playwright install chromium` e `npx playwright test` (o download exige acesso à rede). Os testes percorrem as seis rotas em mobile e desktop, verificam imagens carregadas, ausência de rolagem horizontal, menu, FAQ, oferta, parâmetros do checkout e ampliação dos depoimentos com zoom, teclado, fechamento e retorno do foco. Os testes unitários verificam valores, desconto, catálogo, arquivos oficiais e cadastro dos relatos.
 
-## Vercel
+## Vercel e publicação em /natallucrativo
 
-Crie um **novo projeto** associado a este repositório, framework Next.js, diretório raiz deste projeto, instalação `npm ci` e build `npm run build`. Configure as variáveis acima. Use uma implantação Preview para revisão antes de decidir por Production. Não reutilize o projeto da Confeitaria Lucrativa. Nada foi publicado nem enviado ao GitHub por esta implementação.
+Consulte [o roteiro completo de publicação](docs/VERCEL.md), com configuração do projeto independente, variável SITE_URL, Preview, integração na main e encaminhamento exclusivo da pasta no domínio existente. O site principal não foi alterado. Não associe o domínio principal ao projeto novo: o responsável pela hospedagem existente deve encaminhar somente `/natallucrativo` e seus subcaminhos.
 
-Antes do uso comercial: fornecer arte e capas, confirmar preço/entrega/acesso no checkout e revisar os textos-base legais com identificação real do fornecedor e condições aplicáveis. Não há depoimentos, promessas financeiras, certificados ou bônus inventados.
+O basePath é fixado no build em `next.config.ts`. Links internos Next recebem o prefixo automaticamente; imagens e depoimentos usam `lib/paths.ts` e `lib/images.ts`. Originais, recursos otimizados, bundles, sitemap e URLs canônicas usam o mesmo prefixo. As apostilas são entregues pela Hotmart: este repositório contém as capas oficiais e não oferece PDFs públicos.
 
-## Resultado desta implementação
-
-- Instalação concluída; 3 testes unitários passaram.
-- ESLint, TypeScript e build de produção passaram.
-- 12 testes Playwright passaram: seis páginas em 390 × 664 (perfil iPhone 13) e 1440 × 1000. Chromium instalado no sistema foi usado com `PLAYWRIGHT_CHROMIUM_EXECUTABLE=/usr/bin/chromium npx playwright test --workers=2`.
-- Capturas adicionais em 390 × 844 e 1440 × 1000 foram geradas para inspeção.
-- Não há imagens fornecidas para validar; o comportamento sem arquivos foi testado. A arte deve ser revisada após recebimento.
-- Checkout externo: tentativa bloqueada por HTTP 403 no proxy. URL, produto, parâmetros e preço local foram validados; preço externo não confirmado.
-- Nenhum deploy ou push foi executado.
-
-## Conectar este projeto ao GitHub e à Vercel
-
-O repositório independente é `adalgizagon-bot/natal-lucrativo`. A implementação foi preparada na branch `codex/natal-lucrativo-vercel` para revisão antes de Production.
-
-1. Na Vercel, escolha **Add New → Project** e importe **adalgizagon-bot/natal-lucrativo**. Não selecione o projeto antigo.
-2. Selecione a branch `codex/natal-lucrativo-vercel` na importação, se disponível. Revise a criação do primeiro deploy: importar um projeto pode publicar a primeira versão em Production. Para revisar somente em Preview, configure o projeto para manter `main` como Production Branch e solicite um deploy da branch `codex/natal-lucrativo-vercel` pelo recurso de deploy por referência Git da Vercel.
-3. Use framework **Next.js**, Root Directory **.**, Node.js **24.x**, instalação **npm ci**, build **npm run build** e Output Directory padrão do Next.js.
-4. Não há variáveis obrigatórias para o site abrir. Após obter a URL real, configure `SITE_URL` e faça um novo deploy para preencher o sitemap. WhatsApp continua opcional.
-5. Atualizações enviadas à branch de revisão podem gerar novos Preview Deployments com a integração Git habilitada. Após revisar e autorizar Production, faça o merge para a branch definida como Production Branch. Atualizações nessa branch passam a gerar deploys de produção automaticamente.
-
-Não adicione `node_modules`, `.next` ou arquivos `.env.local` ao Git. O lockfile está versionado para instalação reproduzível.
+Validação desta preparação: `npm test` (6 testes), ESLint, TypeScript, build com `.env.production` e 18 testes Playwright em mobile/desktop passaram. As verificações cobrem as seis páginas sob `/natallucrativo`, todas as imagens visíveis, capas, depoimentos com zoom, links internos e Hotmart, sitemap, canônicos/Open Graph e caminhos dos bundles. A raiz do projeto independente retorna 404, evitando assumir a home do domínio compartilhado. Não houve alteração no repositório ou na hospedagem do site principal; a Vercel ainda requer configuração e encaminhamento conforme o roteiro.
