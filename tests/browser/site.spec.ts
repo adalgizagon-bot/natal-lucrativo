@@ -6,6 +6,12 @@ for(const route of routes) test(`página ${route}: navegação, layout e links`,
  expect(response?.status()).toBe(200);
  await expect(page.locator('h1')).toHaveCount(1);
  await expect(page.locator('h1')).toBeVisible();
+ await expect(page.locator('.example-notice')).toHaveCount(0);
+ if(route==='/' || route==='/combo-natal-lucrativo'){
+  await expect(page.locator('.hero .old-price')).toContainText('197,00');
+  await expect(page.locator('.hero .price')).toContainText('29,90');
+  await expect(page.locator('.hero .saving')).toContainText('167,10');
+ }
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBeTruthy();
  const links=page.locator('a[href*="pay.hotmart.com"]');
  for(const link of await links.all()){

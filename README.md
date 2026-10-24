@@ -21,7 +21,7 @@ Abra a porta 3000 no recurso de visualização do seu ambiente, ou acesse `http:
 
 `lib/config.ts` centraliza os preços, checkout, Instagram e sete materiais. O produto Hotmart termina com a letra **O**; todos os botões usam a mesma URL com os parâmetros preservados. O preço externo não foi confirmado: a rede retornou 403.
 
-O preço de referência R$ 197,00 está configurado, mas a comparação está oculta por padrão (`referencePriceConfirmed: false`). Ative apenas após confirmar sua veracidade comercial. O desconto de aproximadamente 85% é calculado, não fixado. O preço promocional é R$ 29,90.
+A oferta solicitada exibe o preço de referência R$ 197,00 e o promocional R$ 29,90 (`referencePriceConfirmed: true`). Economia de R$ 167,10 e desconto de aproximadamente 85% são calculados a partir dos valores centrais. O responsável deve manter essa comparação comercial verdadeira e atualizada. O preço externo na Hotmart ainda não foi confirmado.
 
 Copie `.env.example` para `.env.local` e preencha apenas valores reais:
 
@@ -62,7 +62,7 @@ Antes do uso comercial: fornecer arte e capas, confirmar preço/entrega/acesso n
 
 ## Resultado desta implementação
 
-- Instalação concluída; 3 testes unitários passaram.
+- Instalação concluída; 4 testes unitários passaram.
 - ESLint, TypeScript e build de produção passaram.
 - 12 testes Playwright passaram: seis páginas em 390 × 664 (perfil iPhone 13) e 1440 × 1000. Chromium instalado no sistema foi usado com `PLAYWRIGHT_CHROMIUM_EXECUTABLE=/usr/bin/chromium npx playwright test --workers=2`.
 - Capturas adicionais em 390 × 844 e 1440 × 1000 foram geradas para inspeção.
@@ -81,3 +81,14 @@ O repositório independente é `adalgizagon-bot/natal-lucrativo`. A implementaç
 5. Atualizações enviadas à branch de revisão podem gerar novos Preview Deployments com a integração Git habilitada. Após revisar e autorizar Production, faça o merge para a branch definida como Production Branch. Atualizações nessa branch passam a gerar deploys de produção automaticamente.
 
 Não adicione `node_modules`, `.next` ou arquivos `.env.local` ao Git. O lockfile está versionado para instalação reproduzível.
+
+
+## Reformulação natalina
+
+Paleta: vermelho #B71C1C, verde #123D2B e dourado #F4C45E. Oferta compartilhada no topo, destaque intermediário, fechamento e barra mobile. Os preços e a economia ficam no mesmo componente, sem contador ou escassez fictícia.
+
+Não foram recebidas fotografias ou capas: o antigo quadro com o número 7 foi removido, e os espaços reservados identificam a ausência dos arquivos reais. Adicione a arte e as sete capas nos caminhos de integração acima para habilitá-las no próximo build.
+
+Depoimentos são cadastrados em `lib/testimonials.ts`. A lista começa vazia. Inclua somente nome, relato, foto autorizada opcional e nota real opcional. Em produção a seção não aparece enquanto não existirem relatos reais. Em `npm run dev`, exemplos de layout claramente identificados demonstram os cartões e o carrossel; não usam nomes, fotos ou avaliações fictícias. O carrossel usa rolagem nativa, gesto de arrastar e setas do teclado quando está em foco.
+
+Validação da reformulação: 4 testes unitários e 12 testes de navegador passaram; lint, TypeScript e build passaram. Foram conferidas adicionalmente as larguras 320, 360, 390, 768 e 1440 pixels, sem cortes nos preços/botões ou rolagem horizontal. No servidor de desenvolvimento, os três exemplos de depoimentos e a navegação do carrossel por teclado foram exercitados. Os testes de produção confirmam que os exemplos não aparecem.
