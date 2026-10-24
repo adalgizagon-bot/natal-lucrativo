@@ -15,8 +15,25 @@ test('combo contém exatamente sete materiais distintos',()=>{
  assert.equal(new Set(materials.map(m=>m.title)).size,7);
 });
 
-import { visibleTestimonials } from '../lib/testimonials.ts';
-test('produção não apresenta exemplos de depoimentos',()=>{
- assert.deepEqual(visibleTestimonials(true),{items:[],examples:false});
- assert.equal(visibleTestimonials(false).examples,true);
+import { testimonials } from '../lib/testimonials.ts';
+import { imageFiles, materialImage, officialArt } from '../lib/images.ts';
+import { existsSync } from 'node:fs';
+import path from 'node:path';
+test('arquivos oficiais e sete capas existem e são associados na ordem correta',()=>{
+ const expected = ['Cupcakes Natalinos_ Receitas para Vender.png','Donuts Natalinos_ Receitas para Encantar e Vender.png','Capa Natalina de Panetone e Chocotone.png','Natal Lucrativo_ Recheios de Chocotone.png','Natal Lucrativo_ 15 Receitas Festivas.png','Natal Lucrativo_ Ceia Festiva em Casa.png','Biscoitos Decorados Natalinos Lucrativos.png'];
+ assert.equal(officialArt(),'/images/imagem topo.png');
+ assert.equal(imageFiles.logo,'Logo Natal Lucrativo em Casa.png');
+ for(const [index,material] of materials.entries()) assert.equal(materialImage(material.number),`/images/${expected[index]}`);
+ for(const name of [imageFiles.hero,imageFiles.logo,...expected]) assert(existsSync(path.join(process.cwd(),'public/images',name)),name);
+});
+test('sete depoimentos fornecidos existem sem nomes, notas ou relatos inventados',()=>{
+ assert.equal(testimonials.length,7);
+ for(const item of testimonials){
+  assert(existsSync(path.join(process.cwd(),'public',item.image)));
+  assert(!('rating' in item));
+  assert(!('name' in item));
+  for(const mask of item.privacyMasks){
+   assert(mask.left>=0 && mask.top>=0 && mask.left+mask.width<=100 && mask.top+mask.height<=100);
+  }
+ }
 });

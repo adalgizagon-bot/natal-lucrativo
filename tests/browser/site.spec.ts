@@ -18,7 +18,12 @@ for(const route of routes) test(`página ${route}: navegação, layout e links`,
   await expect(link).toHaveAttribute('href','https://pay.hotmart.com/B41794197O?off=dkr9odoe&checkoutMode=10');
   await expect(link).toHaveAttribute('rel','noopener noreferrer');
  }
- expect(await page.locator('img').evaluateAll(imgs=>imgs.every(i=>(i as HTMLImageElement).complete&&(i as HTMLImageElement).naturalWidth>0))).toBeTruthy();
+ const images=page.locator('img:visible');
+ for(const img of await images.all()){
+  await img.scrollIntoViewIfNeeded();
+  await expect(img).toBeVisible();
+  await expect.poll(()=>img.evaluate(i=>(i as HTMLImageElement).complete&&(i as HTMLImageElement).naturalWidth>0)).toBeTruthy();
+ }
  if(route==='/combo-natal-lucrativo'){
   await page.locator('summary').first().click();
   await expect(page.locator('details').first()).toHaveAttribute('open','');
@@ -31,4 +36,35 @@ for(const route of routes) test(`página ${route}: navegação, layout e links`,
   await expect(page).toHaveURL(/\/contato$/);
  }
  expect(errors).toEqual([]);
+});
+
+for(const route of ['/','/combo-natal-lucrativo']) test(`imagens oficiais e ampliação acessível ${route}`,async({page})=>{
+ await page.goto(route);
+ await expect(page.locator('.official-logo')).toHaveAttribute('alt','Natal Lucrativo em Casa');
+ await expect(page.locator('.hero-image')).toBeVisible();
+ await expect(page.locator('.catalog .cover img')).toHaveCount(7);
+ await expect(page.locator('.testimonial-card')).toHaveCount(7);
+ await expect(page.locator('.art-reserved,.cover-reserved,.example-notice')).toHaveCount(0);
+ const trigger=page.getByRole('button',{name:'Ampliar depoimento 1',exact:true});
+ await trigger.click();
+ const modal=page.getByRole('dialog');
+ await expect(modal).toBeVisible();
+ await expect(modal.getByRole('heading')).toHaveText('Depoimento 1 de 7');
+ await expect(modal.locator('.privacy-mask')).toHaveCount(1);
+ await expect.poll(()=>modal.locator('img').evaluate(i=>(i as HTMLImageElement).complete&&(i as HTMLImageElement).naturalWidth>0)).toBeTruthy();
+ await modal.getByRole('button',{name:'Ampliar mais'}).click();
+ await expect(modal.locator('.lightbox-image')).toHaveClass(/zoomed/);
+ await modal.getByRole('button',{name:'Próximo depoimento',exact:true}).click();
+ await expect(modal.getByRole('heading')).toHaveText('Depoimento 2 de 7');
+ await expect(modal.locator('.privacy-mask')).toHaveCount(2);
+ await page.keyboard.press('ArrowLeft');
+ await expect(modal.getByRole('heading')).toHaveText('Depoimento 1 de 7');
+ await page.keyboard.press('Escape');
+ await expect(modal).not.toBeVisible();
+ await expect(trigger).toBeFocused();
+ await page.getByRole('button',{name:'Ampliar depoimento 7',exact:true}).click();
+ await expect(modal.getByRole('heading')).toHaveText('Depoimento 7 de 7');
+ await expect(modal.locator('.privacy-mask')).toHaveCount(1);
+ await modal.getByRole('button',{name:'Fechar depoimento ampliado'}).click();
+ await expect(modal).not.toBeVisible();
 });
