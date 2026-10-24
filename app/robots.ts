@@ -1,2 +1,5 @@
 import type { MetadataRoute } from 'next';
-export default function robots():MetadataRoute.Robots {const base=process.env.SITE_URL?.replace(/\/$/,'');return {rules:{userAgent:'*',allow:'/'},...(base?{sitemap:`${base}/sitemap.xml`}:{})};}
+import { publicUrl } from '@/lib/routing.mjs';
+export default function robots(): MetadataRoute.Robots {
+  return { rules: { userAgent: '*', allow: '/' }, sitemap: publicUrl('/sitemap.xml') };
+}

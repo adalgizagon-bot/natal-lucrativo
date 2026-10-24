@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 const routes=['/','/combo-natal-lucrativo','/cursos','/contato','/politica-de-privacidade','/termos-de-uso'];
 for(const route of routes) test(`página ${route}: navegação, layout e links`,async({page},info)=>{
  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
- const response=await page.goto(route);
+ const response=await page.goto(`/natallucrativo${route === "/" ? "" : route}`);
  expect(response?.status()).toBe(200);
  await expect(page.locator('h1')).toHaveCount(1);
  await expect(page.locator('h1')).toBeVisible();
@@ -22,7 +22,7 @@ for(const route of routes) test(`página ${route}: navegação, layout e links`,
   await page.getByRole('button',{name:'Abrir menu'}).click();
   await expect(page.getByRole('navigation',{name:'Principal'})).toBeVisible();
   await page.getByRole('navigation',{name:'Principal'}).getByRole('link',{name:'Contato',exact:true}).click();
-  await expect(page).toHaveURL(/\/contato$/);
+  await expect(page).toHaveURL(/\/natallucrativo\/contato$/);
  }
  expect(errors).toEqual([]);
 });

@@ -81,3 +81,9 @@ O repositório independente é `adalgizagon-bot/natal-lucrativo`. A implementaç
 5. Atualizações enviadas à branch de revisão podem gerar novos Preview Deployments com a integração Git habilitada. Após revisar e autorizar Production, faça o merge para a branch definida como Production Branch. Atualizações nessa branch passam a gerar deploys de produção automaticamente.
 
 Não adicione `node_modules`, `.next` ou arquivos `.env.local` ao Git. O lockfile está versionado para instalação reproduzível.
+
+## Publicação sob /natallucrativo
+
+Esta versão usa `basePath: '/natallucrativo'` para ser acessada pelo reverse proxy do domínio `https://www.confeitarialucrativaoficial.com`. Os recursos e a navegação permanecem no prefixo. O endereço de produção upstream confirmado é `https://natal-lucrativo-gamma.vercel.app`; após o novo build, a aplicação direta fica em `/natallucrativo`, não na raiz antiga. Configure `SITE_URL=https://www.confeitarialucrativaoficial.com`.
+
+Leia `PROXY-NATALLUCRATIVO.md` para o roteiro de Preview e a ordem de deploy: primeiro este projeto com o prefixo, depois o rewrite no principal. Checkout, textos, preços e apresentação foram preservados.
