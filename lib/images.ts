@@ -1,3 +1,4 @@
+import { withBasePath } from './paths.ts';
 // Arquivos oficiais recebidos em public/images. Manter nomes e originais intactos.
 export const imageFiles = {
   hero: 'imagem topo.png',
@@ -12,7 +13,7 @@ export const imageFiles = {
     '07': 'Biscoitos Decorados Natalinos Lucrativos.png',
   },
 };
-export const imagePath = (name: string) => `/images/${name}`;
+export const imagePath = (name: string) => withBasePath(`/images/${name}`);
 export const officialArt = () => imagePath(imageFiles.hero);
 export function materialImage(number: string) {
   const name = imageFiles.covers[number as keyof typeof imageFiles.covers];

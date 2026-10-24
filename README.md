@@ -11,17 +11,17 @@ npm ci
 npm run dev
 ```
 
-O servidor usa a porta 3000. Para produção local: `npm run build` e `npm start`. No ambiente cloud, use `npm ci --cache /workspace/.npm-cache` caso o cache padrão não seja gravável. Cada tarefa já é isolada; use o checkout existente, sem criar worktree salvo solicitação.
+O servidor usa a porta 3000; abra `/natallucrativo` (a raiz `/` não é a home deste projeto). Para produção local: `npm run build` e `npm start`. No ambiente cloud, use `npm ci --cache /workspace/.npm-cache` caso o cache padrão não seja gravável. Cada tarefa já é isolada; use o checkout existente, sem criar worktree salvo solicitação.
 
 ## Rotas e configuração
 
-Páginas: `/`, `/combo-natal-lucrativo`, `/cursos`, `/contato`, `/politica-de-privacidade`, `/termos-de-uso`. A página do combo inclui barra fixa mobile com espaço livre no rodapé.
+Páginas relativas ao basePath `/natallucrativo`: `/`, `/combo-natal-lucrativo`, `/cursos`, `/contato`, `/politica-de-privacidade`, `/termos-de-uso`. A página do combo inclui barra fixa mobile com espaço livre no rodapé.
 
 `lib/config.ts` centraliza os sete materiais, preço, referência, checkout e Instagram. Oferta solicitada: de R$ 197,00 por R$ 29,90; economia de R$ 167,10 e desconto arredondado de 85%, calculados. Manter a comparação comercial verdadeira e atualizada. Todos os botões usam o mesmo checkout Hotmart, com produto terminado em letra **O** e parâmetros preservados. A consulta externa ao preço foi bloqueada pelo proxy (403); o preço no checkout não foi confirmado.
 
 Copie `.env.example` para `.env.local` somente se necessário:
 
-- `SITE_URL`: URL HTTPS final. Sem ela o site funciona, mas o sitemap fica vazio para não anunciar domínio fictício. Configure e faça novo deploy após obter o domínio.
+- `SITE_URL`: `https://www.confeitarialucrativaoficial.com`, sem sufixo de pasta. Valor público em `.env.production`; mantenha o mesmo valor nas configurações Vercel. Sitemap e canônicos incluem `/natallucrativo` automaticamente.
 - `NEXT_PUBLIC_WHATSAPP_NUMBER`: opcional, 10 a 15 dígitos com país e DDD. Sem número válido, o canal não aparece. Requer novo build.
 
 Não há coleta de cartão, formulário ou analytics. Os documentos legais são textos-base e ainda precisam de revisão e identificação real do fornecedor antes do uso comercial.
@@ -64,12 +64,10 @@ PLAYWRIGHT_CHROMIUM_EXECUTABLE=/usr/bin/chromium npx playwright test --workers=2
 
 Para máquinas sem Chromium instalado: `npx playwright install chromium` e `npx playwright test` (o download exige acesso à rede). Os testes percorrem as seis rotas em mobile e desktop, verificam imagens carregadas, ausência de rolagem horizontal, menu, FAQ, oferta, parâmetros do checkout e ampliação dos depoimentos com zoom, teclado, fechamento e retorno do foco. Os testes unitários verificam valores, desconto, catálogo, arquivos oficiais e cadastro dos relatos.
 
-## Vercel
+## Vercel e publicação em /natallucrativo
 
-Use um **novo projeto** para `adalgizagon-bot/natal-lucrativo`, diretório raiz `.`, framework Next.js, Node.js 24.x, instalação `npm ci` e build `npm run build`; Output Directory padrão. Não reutilize o projeto da Confeitaria Lucrativa.
+Consulte [o roteiro completo de publicação](docs/VERCEL.md), com configuração do projeto independente, variável SITE_URL, Preview, integração na main e encaminhamento exclusivo da pasta no domínio existente. O site principal não foi alterado. Não associe o domínio principal ao projeto novo: o responsável pela hospedagem existente deve encaminhar somente `/natallucrativo` e seus subcaminhos.
 
-A implementação está na branch `codex/natal-lucrativo-vercel`, sincronizada com os arquivos enviados à `main`. A Vercel deve usar essa branch para o Preview; a presença das imagens na `main` sozinha não integra os componentes. Mantenha `main` como Production Branch se quiser revisão antes da produção. Atualizações da branch de trabalho podem gerar Preview Deployments quando a integração Git estiver habilitada. Após aprovação para Production, integre a implementação à branch de produção.
+O basePath é fixado no build em `next.config.ts`. Links internos Next recebem o prefixo automaticamente; imagens e depoimentos usam `lib/paths.ts` e `lib/images.ts`. Originais, recursos otimizados, bundles, sitemap e URLs canônicas usam o mesmo prefixo. As apostilas são entregues pela Hotmart: este repositório contém as capas oficiais e não oferece PDFs públicos.
 
-A criação inicial de um projeto Vercel pode gerar deploy de produção: revise as opções antes de importar. Nenhum deploy de Production é executado por estes comandos. Nunca envie `.env.local`, `.next` ou `node_modules` ao GitHub.
-
-Validação da integração dos arquivos oficiais: 5 testes unitários, 16 testes de navegador, ESLint, TypeScript e build de produção passaram. Capturas verificadas em 320, 390, 768 e 1440 pixels sem rolagem horizontal; arte, logo, capas e depoimentos carregaram. O diálogo de ampliação foi exercitado com zoom, troca de relato, Escape e retorno do foco. A integração foi preparada para Preview na Vercel; não houve deploy de Production nem confirmação de preço no checkout externo.
+Validação desta preparação: `npm test` (6 testes), ESLint, TypeScript, build com `.env.production` e 18 testes Playwright em mobile/desktop passaram. As verificações cobrem as seis páginas sob `/natallucrativo`, todas as imagens visíveis, capas, depoimentos com zoom, links internos e Hotmart, sitemap, canônicos/Open Graph e caminhos dos bundles. A raiz do projeto independente retorna 404, evitando assumir a home do domínio compartilhado. Não houve alteração no repositório ou na hospedagem do site principal; a Vercel ainda requer configuração e encaminhamento conforme o roteiro.
