@@ -42,6 +42,8 @@ test('sete depoimentos fornecidos existem sem nomes, notas ou relatos inventados
 
 test('prefixo único e URLs públicas pertencem ao domínio e caminho corretos',()=>{
  assert.equal(BASE_PATH,'/natallucrativo');
+ assert.equal(withBasePath(),'/natallucrativo');
+ assert.equal(withBasePath('cursos'),'/natallucrativo/cursos');
  assert.equal(withBasePath('/cursos'),'/natallucrativo/cursos');
  assert.equal(withBasePath('/natallucrativo/cursos'),'/natallucrativo/cursos');
  assert.equal(siteUrl('/cursos'),'https://www.confeitarialucrativaoficial.com/natallucrativo/cursos');

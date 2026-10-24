@@ -3,8 +3,8 @@
 ## Configuração preparada
 
 - Repositório independente: `adalgizagon-bot/natal-lucrativo`.
-- Branch para integração: `codex/natal-lucrativo-vercel` → `main`.
-- Next.js: `basePath: '/natallucrativo'` em `next.config.ts`, constante em `lib/paths.ts`.
+- Branch para integração: `feat/proxy-natallucrativo` → `main`.
+- Next.js: `basePath: '/natallucrativo'` em `next.config.mjs`, constante central em `lib/routing.mjs`.
 - `SITE_URL=https://www.confeitarialucrativaoficial.com`, sem sufixo de pasta. Valor público em `.env.production`; configure o mesmo valor na Vercel para evitar overrides antigos.
 - Página final: `https://www.confeitarialucrativaoficial.com/natallucrativo`.
 - Todas as rotas, imagens originais, otimização de imagens e bundles funcionam dentro de `/natallucrativo`. Links `next/link` recebem o prefixo automaticamente. Hotmart e Instagram mantêm suas URLs externas.
@@ -15,7 +15,7 @@
 1. Na Vercel, crie ou use o projeto **independente natal-lucrativo**, conectado a este repositório. Não reutilize o projeto da Confeitaria Lucrativa.
 2. Use Next.js; Root Directory `.`; Node.js `24.x`; Install Command `npm ci`; Build Command `npm run build`; Output Directory padrão do framework.
 3. Em Settings → Environment Variables, defina `SITE_URL` como `https://www.confeitarialucrativaoficial.com`. Não inclua `/natallucrativo`. Aplique a Production e Preview; verifique se não existe valor antigo conflitante. WhatsApp é opcional.
-4. Gere um Preview da branch `codex/natal-lucrativo-vercel`. Abra a URL fornecida pela Vercel **acrescentando `/natallucrativo`**. A raiz `/` deste projeto retorna 404 intencionalmente: este app usa uma pasta.
+4. Gere um Preview da branch `feat/proxy-natallucrativo`. Abra a URL fornecida pela Vercel **acrescentando `/natallucrativo`**. A raiz `/` deste projeto retorna 404 intencionalmente: este app usa uma pasta.
 5. Teste `/natallucrativo`, `/natallucrativo/combo-natal-lucrativo`, `/natallucrativo/cursos`, `/natallucrativo/contato`, `/natallucrativo/politica-de-privacidade` e `/natallucrativo/termos-de-uso`. Confira imagens, carrossel e zoom, menu, FAQ e checkout. Os links canônicos do Preview apontam ao domínio final por decisão de configuração.
 
 ## 2. Integrar ao main e criar deploy do projeto Natal

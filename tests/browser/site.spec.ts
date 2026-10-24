@@ -92,5 +92,5 @@ for(const route of ['/','/combo-natal-lucrativo']) test(`imagens oficiais e ampl
    expect(resources.every(url=>url?.startsWith('/natallucrativo/'))).toBeTruthy();
   }
   // Este projeto só responde sob seu prefixo, sem assumir a raiz do domínio.
-  expect((await request.get('/')).status()).toBe(404);
+  if(process.env.PROXY_HOST_UNDER_TEST !== '1') expect((await request.get('/')).status()).toBe(404);
  });

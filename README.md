@@ -68,6 +68,18 @@ Para máquinas sem Chromium instalado: `npx playwright install chromium` e `npx 
 
 Consulte [o roteiro completo de publicação](docs/VERCEL.md), com configuração do projeto independente, variável SITE_URL, Preview, integração na main e encaminhamento exclusivo da pasta no domínio existente. O site principal não foi alterado. Não associe o domínio principal ao projeto novo: o responsável pela hospedagem existente deve encaminhar somente `/natallucrativo` e seus subcaminhos.
 
-O basePath é fixado no build em `next.config.ts`. Links internos Next recebem o prefixo automaticamente; imagens e depoimentos usam `lib/paths.ts` e `lib/images.ts`. Originais, recursos otimizados, bundles, sitemap e URLs canônicas usam o mesmo prefixo. As apostilas são entregues pela Hotmart: este repositório contém as capas oficiais e não oferece PDFs públicos.
+O basePath é fixado no build em `next.config.mjs`. Links internos Next recebem o prefixo automaticamente; imagens e depoimentos usam `lib/paths.ts` e `lib/images.ts`. Originais, recursos otimizados, bundles, sitemap e URLs canônicas usam o mesmo prefixo. As apostilas são entregues pela Hotmart: este repositório contém as capas oficiais e não oferece PDFs públicos.
 
 Validação desta preparação: `npm test` (6 testes), ESLint, TypeScript, build com `.env.production` e 18 testes Playwright em mobile/desktop passaram. As verificações cobrem as seis páginas sob `/natallucrativo`, todas as imagens visíveis, capas, depoimentos com zoom, links internos e Hotmart, sitemap, canônicos/Open Graph e caminhos dos bundles. A raiz do projeto independente retorna 404, evitando assumir a home do domínio compartilhado. Não houve alteração no repositório ou na hospedagem do site principal; a Vercel ainda requer configuração e encaminhamento conforme o roteiro.
+
+
+## Compatibilidade com o PR de proxy
+
+A branch `feat/proxy-natallucrativo` foi atualizada com a `main`, preservando a interface, imagens oficiais e depoimentos reais. A configuração ativa é somente `next.config.mjs`, com `BASE_PATH` de `lib/routing.mjs`. `lib/paths.ts` e `lib/site.ts` reexportam as mesmas funções para os componentes da main, evitando duas definições independentes.
+
+O Playwright usa a porta local 3031 e aceita `PLAYWRIGHT_BASE_URL` para testar uma implantação/proxy existente. Sem essa variável, inicia automaticamente o próprio servidor de produção natalino. Os testes específicos do host principal só rodam com `PROXY_HOST_UNDER_TEST=1`; sua execução exige uma instância do principal já configurada. Não são necessários para validar este projeto independente e nenhum arquivo do site principal é modificado.
+
+Consulte também `PROXY-NATALLUCRATIVO.md` para o contexto e as instruções da integração do PR. Os resultados ali descritos anteriormente são históricos; o relatório de resolução registra separadamente os testes executados nesta atualização.
+
+
+Validação da resolução do PR #3: 9 testes unitários, lint, TypeScript, build e 22 testes de navegador passaram. Dois testes específicos do host principal permaneceram pulados por exigirem a aplicação principal em execução. Nenhum arquivo do principal ou imagem original foi alterado. Funcionamento local confirmado sob `/natallucrativo`.
